@@ -21,3 +21,5 @@ public class CommonConfig {
                         .url("https://springshop.wiki.github.org/docs"));
     }
 }
+
+//http://localhost:8100/swagger-ui.html

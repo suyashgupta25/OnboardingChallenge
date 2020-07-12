@@ -1,0 +1,4 @@
+crawler4j:
+    intermediatesPath: intermediates/crawler4j
+    numberOfCrawlers: 12
+
