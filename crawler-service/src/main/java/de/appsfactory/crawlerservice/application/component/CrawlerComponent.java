@@ -14,27 +14,26 @@ public class CrawlerComponent {
     private final Crawler4jProperties properties;
     private final Function<Integer, CrawlConfig> crawlConfigFactory;
     private final Function<CrawlConfig, CrawlController> crawlControllerFactory;
-    private final DataCrawler dataCrawler;
+    private final Function<CrawlingInitQuery, DataCrawler> dataCrawlerFactory;
     private CrawlController crawlController;
 
     public CrawlerComponent(Function<Integer, CrawlConfig> crawlConfigFactory, Function<CrawlConfig,
-            CrawlController> crawlControllerFactory, DataCrawler dataCrawler, Crawler4jProperties properties) {
+            CrawlController> crawlControllerFactory, Function<CrawlingInitQuery, DataCrawler> dataCrawlerFactory,
+                            Crawler4jProperties properties) {
         this.crawlConfigFactory = crawlConfigFactory;
         this.crawlControllerFactory = crawlControllerFactory;
-        this.dataCrawler = dataCrawler;
+        this.dataCrawlerFactory = dataCrawlerFactory;
         this.properties = properties;
     }
 
     public void startACrawler(CrawlingInitQuery crawlingInitQuery) {
-        if(crawlController != null && !crawlController.isFinished()) {
+        if (crawlController != null && !crawlController.isFinished()) {
             return;
         }
         CrawlConfig crawlConfig = crawlConfigFactory.apply(crawlingInitQuery.getDepth());
         crawlController = crawlControllerFactory.apply(crawlConfig);
         crawlController.addSeed(crawlingInitQuery.getUrl().toString());
-        dataCrawler.setCrawlingInitQuery(crawlingInitQuery);
-        CrawlController.WebCrawlerFactory<DataCrawler> factory = () -> dataCrawler;
-
+        CrawlController.WebCrawlerFactory<DataCrawler> factory = () -> dataCrawlerFactory.apply(crawlingInitQuery);
         crawlController.startNonBlocking(factory, properties.getNumberOfCrawlers());
     }
 }

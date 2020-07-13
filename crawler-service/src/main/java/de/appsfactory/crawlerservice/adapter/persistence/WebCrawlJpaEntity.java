@@ -23,6 +23,7 @@ class WebCrawlJpaEntity {
     private String pageTitle;
 
     @NonNull
+    @Column(length=2083)
     private String crawledPageUrl;
 
     @NonNull

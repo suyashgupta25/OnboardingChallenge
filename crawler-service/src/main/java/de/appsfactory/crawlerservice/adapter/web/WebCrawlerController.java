@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-public class CrawlerController {
+public class WebCrawlerController {
 
     private final InitCrawlerUseCase initCrawlerUseCase;
     private final GetCrawledResultsUseCase getCrawledResultsUseCase;
@@ -27,13 +27,13 @@ public class CrawlerController {
 
     @PostMapping("/crawler/init")
     @ResponseStatus(HttpStatus.OK)
-    public void initUrlCrawler(@RequestBody @Valid final CreateCrawlerRequest request) throws Exception {
+    public void initUrlCrawler(@RequestBody @Valid final CreateCrawlerRequest request) {
         log.debug("stating the crawler");
         initCrawlerUseCase.init(CrawlingInitQuery.from(request.getDepth(), request.getUrl()));
     }
 
     @RequestMapping(value = "/crawler/getNameSortedResults/count/{count}", method = RequestMethod.GET)
-    public ResponseEntity<List<GetCrawledResultsByNameResponse>> getCrawlerResultsSortedByName(@PathVariable @Valid Integer count) throws Exception {
+    public ResponseEntity<List<GetCrawledResultsByNameResponse>> getCrawlerResultsSortedByName(@PathVariable @Valid Integer count) {
         log.debug("fetching sorted content based on count");
         var resultsByQuery = getCrawledResultsUseCase.getResultsByQuery(GetCrawlResultsQuery.from(count));
         List<GetCrawledResultsByNameResponse> responseEntity = resultsByQuery.stream().

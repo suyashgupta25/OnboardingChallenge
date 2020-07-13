@@ -7,6 +7,7 @@ import edu.uci.ics.crawler4j.crawler.WebCrawler;
 import edu.uci.ics.crawler4j.parser.HtmlParseData;
 import edu.uci.ics.crawler4j.url.WebURL;
 import lombok.Setter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
@@ -15,22 +16,20 @@ import java.util.Set;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-@Component
 public class DataCrawler extends WebCrawler {
 
     private final static Pattern EXCLUSIONS = Pattern.compile(".*(\\.(css|js|xml|gif|jpg|png|mp3|mp4|zip|gz|pdf))$");
     private final CreateOrUpdateWebCrawlsPort createOrUpdateWebCrawlsPort;
+    private final CrawlingInitQuery crawlingInitQuery;
 
-    @Setter
-    private CrawlingInitQuery crawlingInitQuery;
-
-    public DataCrawler(CreateOrUpdateWebCrawlsPort createOrUpdateWebCrawlsPort) {
+    public DataCrawler(CreateOrUpdateWebCrawlsPort createOrUpdateWebCrawlsPort, CrawlingInitQuery crawlingInitQuery) {
         this.createOrUpdateWebCrawlsPort = createOrUpdateWebCrawlsPort;
+        this.crawlingInitQuery = crawlingInitQuery;
     }
 
     @Override
     public boolean shouldVisit(Page referringPage, WebURL url) {
-        String urlString = url.getURL().toLowerCase();
+        final String urlString = url.getURL().toLowerCase();
         return !EXCLUSIONS.matcher(urlString).matches()
                 && urlString.startsWith(crawlingInitQuery.getBaseUrl());
     }
@@ -41,7 +40,7 @@ public class DataCrawler extends WebCrawler {
         final short depth = page.getWebURL().getDepth();
 
         if (page.getParseData() instanceof HtmlParseData) {
-            HtmlParseData htmlParseData = (HtmlParseData) page.getParseData();
+            final HtmlParseData htmlParseData = (HtmlParseData) page.getParseData();
             final String title = htmlParseData.getTitle();
 
             WebCrawl webCrawl = WebCrawl.withoutId(WebCrawlPageTitle.from(title),
@@ -64,5 +63,4 @@ public class DataCrawler extends WebCrawler {
             }
         }
     }
-
 }

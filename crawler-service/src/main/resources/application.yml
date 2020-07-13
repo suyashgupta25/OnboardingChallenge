@@ -5,7 +5,7 @@ spring:
         name: crawler-service
     datasource:
         driverClassName: org.h2.Driver
-        password: ''
+        password: 'sa456'
         url: jdbc:h2:mem:testdb
         username: sa
     h2:
