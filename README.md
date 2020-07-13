@@ -23,8 +23,8 @@ a) The first one to init the crawler(/crawler/init). Use this JSON for demo
 ```
 We can check the H2 database for the data [http://localhost:8100/h2-console/](http://localhost:8100/h2-console/) (Please check the username/password in the application.yml file). 
 
-Alternatively, you can see the debugging messages in IntelliJ of saved results.
+Alternatively, you can see the debugging messages in IntelliJ of results getting saved.
 
-b) The second endpoint(/crawler/getNameSortedResults/count/{count}) will fetch the sorted results based on count. 
+b) The second endpoint(/crawler/getNameSortedResults/count/{count}) will fetch the page name sorted results for results count parameter. 
 
-Note: There is a crawler4j.yml file too where you can configure the number of crawlers and file for crawler cache.
+Note: There is a crawler4j.yml file too where you can configure the number of crawlers, and the file location for crawler cache.
